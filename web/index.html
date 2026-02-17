@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="A new Flutter project.">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="cocoguard">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <!-- Google Sign-In Client ID for Web -->
+  <!-- TODO: Replace YOUR_GOOGLE_CLIENT_ID with your real Client ID from Google Cloud Console -->
+  <!-- Get one at: https://console.cloud.google.com/apis/credentials -->
+  <!-- Create OAuth 2.0 Client ID → Web application → Add http://localhost to Authorized JavaScript origins -->
+  <meta name="google-signin-client_id" content="744113878334-1u1jrh1f515176ul8d1hn9rg5tjm9d4f.apps.googleusercontent.com" />
+
+  <title>cocoguard</title>
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Google Identity Services (GIS) library for OAuth2 -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <!-- Helper function for Dart JS-interop: opens Google OAuth popup, returns access_token -->
+  <script>
+    function requestGoogleToken(clientId) {
+      return new Promise(function(resolve, reject) {
+        // Wait for GIS library to load
+        if (typeof google === 'undefined' || !google.accounts || !google.accounts.oauth2) {
+          reject('Google Identity Services library not loaded. Check your internet connection.');
+          return;
+        }
+        try {
+          var client = google.accounts.oauth2.initTokenClient({
+            client_id: clientId,
+            scope: 'email profile',
+            callback: function(tokenResponse) {
+              if (tokenResponse && tokenResponse.access_token) {
+                resolve(tokenResponse.access_token);
+              } else {
+                reject(tokenResponse.error || 'No access token received');
+              }
+            },
+            error_callback: function(error) {
+              if (error && error.type === 'popup_closed') {
+                reject('popup_closed');
+              } else {
+                reject(error.type || 'Google Sign-In error');
+              }
+            }
+          });
+          client.requestAccessToken();
+        } catch(e) {
+          reject(e.message || 'Failed to initialize Google Sign-In');
+        }
+      });
+    }
+  </script>
+</head>
+<body>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "156998620258",
+    "project_id": "asiatic-palm-weevil---danger",
+    "storage_bucket": "asiatic-palm-weevil---danger.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:156998620258:android:1ee15924f9e97af8c5ad3b",
+        "android_client_info": {
+          "package_name": "com.example.cocoguard"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXgoRxyL0KcPMUpsOgQTPpSYSGS83yJTU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

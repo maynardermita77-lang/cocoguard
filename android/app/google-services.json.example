@@ -1,0 +1,32 @@
+{
+  "_INSTRUCTIONS": "REPLACE THIS FILE with your actual google-services.json from Firebase Console",
+  "_STEPS": [
+    "1. Go to https://console.firebase.google.com/",
+    "2. Select or create your project",
+    "3. Add an Android app with package name: com.example.cocoguard",
+    "4. Download google-services.json",
+    "5. Replace this file with the downloaded one",
+    "6. Restart the app"
+  ],
+  "project_info": {
+    "project_number": "YOUR_PROJECT_NUMBER",
+    "project_id": "your-project-id",
+    "storage_bucket": "your-project-id.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "YOUR_APP_ID",
+        "android_client_info": {
+          "package_name": "com.example.cocoguard"
+        }
+      },
+      "api_key": [
+        {
+          "current_key": "YOUR_API_KEY"
+        }
+      ]
+    }
+  ],
+  "configuration_version": "1"
+}
