@@ -14,7 +14,6 @@ import 'register_screen.dart';
 import 'forgot_password_screen.dart';
 import 'dashboard_screen.dart';
 
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -190,7 +189,6 @@ class _LoginScreenState extends State<LoginScreen> {
           ],
         ),
         actions: [
-
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(tr('common.ok')),
@@ -429,7 +427,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                           ),
-
                         ],
                       ),
                     ),

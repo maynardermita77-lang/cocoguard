@@ -4,8 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 // ignore: depend_on_referenced_packages
 import 'package:flutter/foundation.dart' show kIsWeb;
-// ignore: depend_on_referenced_packages
-import 'dart:io' show Platform;
 
 class ApiService {
   // Base URL with automatic network discovery
