@@ -231,7 +231,7 @@ class OfflineSyncService {
       );
 
       // Add metadata
-      request.fields['confidence_threshold'] = '0.55';
+      request.fields['confidence_threshold'] = '0.30';
       request.fields['save_image'] = 'true';
       request.fields['location_text'] = scan['location'] ?? 'Unknown Location';
       request.fields['offline_scan'] = 'true';

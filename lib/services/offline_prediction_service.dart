@@ -547,7 +547,7 @@ class OfflinePredictionService {
     // confidence (top-k avg > 55%) count — the sigmoid noise floor
     // at 50% makes every class appear to have detections.
     int meaningfulClasses = 0;
-    const double meaningfulConfidence = 0.45;
+    const double meaningfulConfidence = 0.40;
     for (int classId = 0; classId < numClasses; classId++) {
       final dets = pestDetections[classId]!;
       if (dets.isEmpty) continue;
@@ -597,7 +597,7 @@ class OfflinePredictionService {
     // something it doesn't recognize (teddy bears, food, fabric).
     // If the final detection matches this noise-dominant class, require
     // higher confidence to trust it as a real pest.
-    const double noiseClassMinConfidencePct = 55.0;
+    const double noiseClassMinConfidencePct = 50.0;
 
     final allClassCounts = List<int>.filled(numClasses, 0);
     for (int anchorIdx = 0; anchorIdx < numAnchors; anchorIdx++) {
@@ -978,10 +978,10 @@ class OfflinePredictionService {
             : 0.0;
 
         // Skip noise-floor classes (50% sigmoid baseline)
-        if (weightedConf < 45.0) {
+        if (weightedConf < 40.0) {
           debugPrint(
             '🤖 [TTA] ❌ $pestType: ${weightedConf.toStringAsFixed(1)}% '
-            '(below 45% noise floor, skipping)',
+            '(below 40% noise floor, skipping)',
           );
           continue;
         }
