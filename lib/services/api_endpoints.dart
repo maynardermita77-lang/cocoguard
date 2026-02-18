@@ -720,7 +720,9 @@ class TwoFactorApi {
     try {
       final url = await ApiService.getBaseUrl();
       final response = await http.post(
-        Uri.parse('$url/2fa/send-login-code?email=${Uri.encodeComponent(email)}'),
+        Uri.parse(
+          '$url/2fa/send-login-code?email=${Uri.encodeComponent(email)}',
+        ),
         headers: {'Accept': 'application/json'},
       );
       return ApiService.handleResponse(response);

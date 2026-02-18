@@ -30,9 +30,9 @@ class _FeedbackHistoryScreenState extends State<FeedbackHistoryScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${tr('common.error')}: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('${tr('common.error')}: $e')));
     }
   }
 
@@ -97,151 +97,150 @@ class _FeedbackHistoryScreenState extends State<FeedbackHistoryScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _feedbackList.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.feedback_outlined,
-                        size: 64,
-                        color: Colors.grey,
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        tr('feedback_history.empty'),
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        tr('feedback_history.empty_desc'),
-                        style: const TextStyle(color: Colors.grey),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.feedback_outlined,
+                    size: 64,
+                    color: Colors.grey,
                   ),
-                )
-              : RefreshIndicator(
-                  onRefresh: _loadFeedback,
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: _feedbackList.length,
-                    itemBuilder: (context, index) {
-                      final item = _feedbackList[index];
-                      final type = item['feedback_type']?.toString();
-                      final status = item['status']?.toString() ?? 'pending';
-                      final subject = item['subject']?.toString() ?? '';
-                      final message = item['message']?.toString() ?? '';
-                      final rating = item['rating']?.toString() ?? '';
-                      final date = _formatDate(
-                        item['created_at']?.toString(),
-                      );
+                  const SizedBox(height: 16),
+                  Text(
+                    tr('feedback_history.empty'),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    tr('feedback_history.empty_desc'),
+                    style: const TextStyle(color: Colors.grey),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            )
+          : RefreshIndicator(
+              onRefresh: _loadFeedback,
+              child: ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: _feedbackList.length,
+                itemBuilder: (context, index) {
+                  final item = _feedbackList[index];
+                  final type = item['feedback_type']?.toString();
+                  final status = item['status']?.toString() ?? 'pending';
+                  final subject = item['subject']?.toString() ?? '';
+                  final message = item['message']?.toString() ?? '';
+                  final rating = item['rating']?.toString() ?? '';
+                  final date = _formatDate(item['created_at']?.toString());
 
-                      return Card(
-                        elevation: 3,
-                        margin: const EdgeInsets.only(bottom: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                  return Card(
+                    elevation: 3,
+                    margin: const EdgeInsets.only(bottom: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
                             children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    _getTypeIcon(type),
-                                    color: _getTypeColor(type),
-                                    size: 22,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      subject,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 3,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: _getStatusColor(status)
-                                          .withValues(alpha: 0.15),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Text(
-                                      status.replaceAll('_', ' '),
-                                      style: TextStyle(
-                                        color: _getStatusColor(status),
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 11,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              Icon(
+                                _getTypeIcon(type),
+                                color: _getTypeColor(type),
+                                size: 22,
                               ),
-                              const SizedBox(height: 8),
-                              Text(
-                                message,
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  color: Colors.black87,
-                                  fontSize: 13,
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  subject,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                              const SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  if (rating.isNotEmpty) ...[
-                                    Icon(
-                                      Icons.star,
-                                      size: 14,
-                                      color: Colors.amber.shade600,
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      rating,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                  ],
-                                  const Icon(
-                                    Icons.calendar_today,
-                                    size: 12,
-                                    color: Colors.grey,
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 3,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: _getStatusColor(
+                                    status,
+                                  ).withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  status.replaceAll('_', ' '),
+                                  style: TextStyle(
+                                    color: _getStatusColor(status),
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 11,
                                   ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    date,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                             ],
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                          const SizedBox(height: 8),
+                          Text(
+                            message,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.black87,
+                              fontSize: 13,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              if (rating.isNotEmpty) ...[
+                                Icon(
+                                  Icons.star,
+                                  size: 14,
+                                  color: Colors.amber.shade600,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  rating,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                              ],
+                              const Icon(
+                                Icons.calendar_today,
+                                size: 12,
+                                color: Colors.grey,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                date,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
     );
   }
 }

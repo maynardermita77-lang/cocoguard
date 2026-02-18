@@ -80,6 +80,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
       ApiService.clearToken();
       final box = Hive.box('cocoguard');
       await box.clear();
+      if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -88,6 +89,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
         ),
       );
 
+      if (!mounted) return;
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (_) => const LoginScreen()),
@@ -129,7 +131,11 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.warning_amber, size: 40, color: Colors.red.shade700),
+                  Icon(
+                    Icons.warning_amber,
+                    size: 40,
+                    color: Colors.red.shade700,
+                  ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
@@ -148,16 +154,22 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
             // What will be deleted
             Text(
               tr('delete_account.what_deleted'),
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             _buildDeleteItem(Icons.person, tr('delete_account.item_profile')),
-            _buildDeleteItem(Icons.document_scanner, tr('delete_account.item_scans')),
-            _buildDeleteItem(Icons.settings, tr('delete_account.item_settings')),
-            _buildDeleteItem(Icons.feedback, tr('delete_account.item_feedback')),
+            _buildDeleteItem(
+              Icons.document_scanner,
+              tr('delete_account.item_scans'),
+            ),
+            _buildDeleteItem(
+              Icons.settings,
+              tr('delete_account.item_settings'),
+            ),
+            _buildDeleteItem(
+              Icons.feedback,
+              tr('delete_account.item_feedback'),
+            ),
             const SizedBox(height: 24),
 
             // Password field
@@ -177,9 +189,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                 prefixIcon: const Icon(Icons.lock),
                 suffixIcon: IconButton(
                   icon: Icon(
-                    _obscurePassword
-                        ? Icons.visibility_off
-                        : Icons.visibility,
+                    _obscurePassword ? Icons.visibility_off : Icons.visibility,
                   ),
                   onPressed: () {
                     setState(() => _obscurePassword = !_obscurePassword);
@@ -207,8 +217,7 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed:
-                    (_isLoading || !_confirmed) ? null : _deleteAccount,
+                onPressed: (_isLoading || !_confirmed) ? null : _deleteAccount,
                 icon: _isLoading
                     ? const SizedBox(
                         width: 18,

@@ -41,9 +41,9 @@ class _TwoFactorSetupScreenState extends State<TwoFactorSetupScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${tr('common.error')}: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('${tr('common.error')}: $e')));
     }
   }
 
@@ -65,18 +65,18 @@ class _TwoFactorSetupScreenState extends State<TwoFactorSetupScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _isProcessing = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${tr('common.error')}: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('${tr('common.error')}: $e')));
     }
   }
 
   Future<void> _enableWith2FA() async {
     final code = _codeController.text.trim();
     if (code.length != 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(tr('two_factor.enter_6_digit'))),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(tr('two_factor.enter_6_digit'))));
       return;
     }
 
@@ -99,9 +99,9 @@ class _TwoFactorSetupScreenState extends State<TwoFactorSetupScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _isProcessing = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${tr('common.error')}: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('${tr('common.error')}: $e')));
     }
   }
 
@@ -147,9 +147,9 @@ class _TwoFactorSetupScreenState extends State<TwoFactorSetupScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _isProcessing = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${tr('common.error')}: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('${tr('common.error')}: $e')));
     }
   }
 
@@ -203,8 +203,9 @@ class _TwoFactorSetupScreenState extends State<TwoFactorSetupScreen> {
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
-                                    color:
-                                        _isEnabled ? Colors.green : Colors.red,
+                                    color: _isEnabled
+                                        ? Colors.green
+                                        : Colors.red,
                                   ),
                                 ),
                                 if (_maskedEmail.isNotEmpty) ...[
@@ -307,13 +308,15 @@ class _TwoFactorSetupScreenState extends State<TwoFactorSetupScreen> {
                             SizedBox(
                               width: double.infinity,
                               child: ElevatedButton(
-                                onPressed:
-                                    _isProcessing ? null : _enableWith2FA,
+                                onPressed: _isProcessing
+                                    ? null
+                                    : _enableWith2FA,
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF2d7a3e),
                                   foregroundColor: Colors.white,
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 14),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 14,
+                                  ),
                                 ),
                                 child: _isProcessing
                                     ? const SizedBox(
@@ -375,9 +378,7 @@ class _TwoFactorSetupScreenState extends State<TwoFactorSetupScreen> {
             ),
           ),
           const SizedBox(width: 12),
-          Expanded(
-            child: Text(text, style: const TextStyle(fontSize: 14)),
-          ),
+          Expanded(child: Text(text, style: const TextStyle(fontSize: 14))),
         ],
       ),
     );

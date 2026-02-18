@@ -149,11 +149,11 @@ class KnowledgeArticle {
     // Get the base URL from ApiService
     final baseUrl = ApiService.baseUrl;
 
-    // Extract just the filename from the path
-    final filename = trimmedUrl.split('/').last;
-
-    // Construct the full URL
-    final fullUrl = '$baseUrl/uploads/files/$filename';
+    // Preserve the original path from the backend (e.g. /assets/knowledge/file.jpg)
+    // instead of extracting just the filename
+    final fullUrl = trimmedUrl.startsWith('/')
+        ? '$baseUrl$trimmedUrl'
+        : '$baseUrl/$trimmedUrl';
 
     developer.log(
       'KnowledgeArticle image URL: imageUrl=$imageUrl, baseUrl=$baseUrl, fullUrl=$fullUrl',

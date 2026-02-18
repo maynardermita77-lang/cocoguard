@@ -35,34 +35,33 @@ class OfflinePredictionService {
   static const double nmsIouThreshold = 0.5;
 
   // Minimum average margin between best and 2nd-best class per anchor.
-  static const double minAvgMargin = 0.09;
+  static const double minAvgMargin = 0.04;
 
   // ── 3-STATE DETECTION THRESHOLDS ──
   // Calibrated for YOLOv11-S float16 TFLite sigmoid output.
   //
-  //   ✅ DETECTED   : confidence ≥ 60%  →  reliable identification
-  //   ⚠️ UNCERTAIN  : confidence 45–60% →  possible pest, retake recommended
-  //   ❓ OUT_OF_SCOPE: confidence < 45%  →  no recognizable pest / unknown image
+  //   ✅ DETECTED   : confidence ≥ 50%  →  reliable identification
+  //   ⚠️ UNCERTAIN  : confidence 35–50% →  possible pest, retake recommended
+  //   ❓ OUT_OF_SCOPE: confidence < 35%  →  no recognizable pest / unknown image
   //
-  // These replace the old complex multi-guard stack.
-  // 60% = 10% above sigmoid baseline (50%), proven via calibration.
-  // 45% = just below baseline; anything here is noise or very marginal.
-  static const double detectedThreshold = 60.0;
-  static const double uncertainThreshold = 45.0;
+  // Lowered from 60/45 — sigmoid baseline is ~50%, real pests score 52-65%.
+  // Previous thresholds were too aggressive and filtered real detections.
+  static const double detectedThreshold = 50.0;
+  static const double uncertainThreshold = 35.0;
 
   // Minimum number of anchors for the best class to be considered a real detection.
   // Real pest objects produce many concentrated anchor hits; random/non-pest images
   // (like humans) produce scattered low-count hits across multiple classes.
-  static const int minAnchorCount = 3;
+  static const int minAnchorCount = 2;
 
   // Maximum allowed class spread ratio. If the top 2 classes have very similar
   // confidence (ratio > this), the detection is likely noise from a non-pest image.
   // Real pests have one dominant class. Value 0.85 means second class must be < 85% of first.
-  static const double maxClassSpreadRatio = 0.85;
+  static const double maxClassSpreadRatio = 0.92;
 
   // Maximum number of classes that can have detections simultaneously.
   // Real pest images typically trigger 1-2 classes. If 4+ classes fire, it's noise.
-  static const int maxSimultaneousClasses = 3;
+  static const int maxSimultaneousClasses = 4;
 
   // Default labels for coconut pests
   static const List<String> defaultLabels = [
@@ -548,7 +547,7 @@ class OfflinePredictionService {
     // confidence (top-k avg > 55%) count — the sigmoid noise floor
     // at 50% makes every class appear to have detections.
     int meaningfulClasses = 0;
-    const double meaningfulConfidence = 0.55;
+    const double meaningfulConfidence = 0.45;
     for (int classId = 0; classId < numClasses; classId++) {
       final dets = pestDetections[classId]!;
       if (dets.isEmpty) continue;
@@ -598,7 +597,7 @@ class OfflinePredictionService {
     // something it doesn't recognize (teddy bears, food, fabric).
     // If the final detection matches this noise-dominant class, require
     // higher confidence to trust it as a real pest.
-    const double noiseClassMinConfidencePct = 68.0;
+    const double noiseClassMinConfidencePct = 55.0;
 
     final allClassCounts = List<int>.filled(numClasses, 0);
     for (int anchorIdx = 0; anchorIdx < numAnchors; anchorIdx++) {
@@ -979,10 +978,10 @@ class OfflinePredictionService {
             : 0.0;
 
         // Skip noise-floor classes (50% sigmoid baseline)
-        if (weightedConf < 55.0) {
+        if (weightedConf < 45.0) {
           debugPrint(
             '🤖 [TTA] ❌ $pestType: ${weightedConf.toStringAsFixed(1)}% '
-            '(below 55% noise floor, skipping)',
+            '(below 45% noise floor, skipping)',
           );
           continue;
         }
@@ -1066,7 +1065,7 @@ class OfflinePredictionService {
   Future<Map<String, dynamic>> predict(
     Uint8List imageBytes, {
     double confidenceThreshold =
-        0.55, // Above 50% sigmoid baseline — filters noise, matches backend
+        0.30, // Lowered to allow real pest detections through, matches backend
   }) async {
     debugPrint(
       '🤖 [TFLite] ========== STARTING TTA OFFLINE PREDICTION ==========',

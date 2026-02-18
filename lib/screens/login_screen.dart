@@ -96,6 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
           final twoFaStatus = await TwoFactorApi.getStatus();
           if (twoFaStatus['enabled'] == true) {
             // Redirect to 2FA verification screen
+            if (!mounted) return;
             final userEmail = loginData['user']?['email'] ?? username;
             Navigator.pushReplacement(
               context,

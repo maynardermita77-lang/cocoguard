@@ -75,8 +75,7 @@ class _TwoFactorLoginScreenState extends State<TwoFactorLoginScreen> {
     });
 
     try {
-      final result =
-          await TwoFactorApi.verifyLoginCode(widget.email, code);
+      final result = await TwoFactorApi.verifyLoginCode(widget.email, code);
 
       if (!mounted) return;
 
@@ -90,8 +89,7 @@ class _TwoFactorLoginScreenState extends State<TwoFactorLoginScreen> {
       } else {
         setState(() {
           _isLoading = false;
-          _error =
-              result['message'] ?? tr('two_factor.invalid_code');
+          _error = result['message'] ?? tr('two_factor.invalid_code');
         });
       }
     } catch (e) {
