@@ -8,6 +8,7 @@ import 'change_password_screen.dart';
 import 'edit_profile_screen.dart';
 import 'login_screen.dart';
 import 'settings_screen.dart';
+import 'two_factor_setup_screen.dart';
 import '../services/user_service.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -454,6 +455,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (_) => const SettingsScreen(),
+                              ),
+                            );
+                          },
+                        ),
+                        const Divider(height: 1),
+                        ListTile(
+                          leading: const Icon(
+                            Icons.security,
+                            color: Color(0xFF2d7a3e),
+                          ),
+                          title: Text(tr('two_factor.title')),
+                          trailing: const Icon(Icons.chevron_right),
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const TwoFactorSetupScreen(),
                               ),
                             );
                           },

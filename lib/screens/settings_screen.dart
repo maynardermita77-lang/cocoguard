@@ -11,6 +11,9 @@ import '../services/translation_service.dart';
 import 'edit_profile_screen.dart';
 import 'change_password_screen.dart';
 import 'login_screen.dart';
+import 'two_factor_setup_screen.dart';
+import 'delete_account_screen.dart';
+import 'feedback_history_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -783,6 +786,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       );
                     },
                   ),
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: const Icon(
+                      Icons.feedback_outlined,
+                      color: Color(0xFF2d7a3e),
+                    ),
+                    title: Text(tr('feedback_history.title')),
+                    subtitle: const Text('View your submitted feedback'),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const FeedbackHistoryScreen(),
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
               const SizedBox(height: 12),
@@ -932,6 +953,49 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     subtitle: Text(tr('settings.export_data_desc')),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: _dataManagement,
+                  ),
+                  const Divider(),
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: const Icon(
+                      Icons.security,
+                      color: Color(0xFF2d7a3e),
+                    ),
+                    title: Text(tr('two_factor.title')),
+                    subtitle: Text(tr('two_factor.subtitle')),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const TwoFactorSetupScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: const Icon(
+                      Icons.delete_forever,
+                      color: Colors.red,
+                    ),
+                    title: Text(
+                      tr('delete_account.title'),
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                    subtitle: Text(tr('delete_account.subtitle')),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      color: Colors.red,
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const DeleteAccountScreen(),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),

@@ -13,6 +13,7 @@ import '../services/knowledge_service.dart';
 import 'register_screen.dart';
 import 'forgot_password_screen.dart';
 import 'dashboard_screen.dart';
+import 'two_factor_login_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -88,6 +89,28 @@ class _LoginScreenState extends State<LoginScreen> {
         try {
           await PushNotificationService.registerTokenAfterLogin();
         } catch (_) {}
+
+        // Check if 2FA is enabled
+        if (!mounted) return;
+        try {
+          final twoFaStatus = await TwoFactorApi.getStatus();
+          if (twoFaStatus['enabled'] == true) {
+            // Redirect to 2FA verification screen
+            final userEmail = loginData['user']?['email'] ?? username;
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TwoFactorLoginScreen(
+                  email: userEmail,
+                  loginData: loginData,
+                ),
+              ),
+            );
+            return;
+          }
+        } catch (_) {
+          // If 2FA check fails, proceed to dashboard anyway
+        }
 
         // Login successful, navigate to dashboard
         if (!mounted) return;

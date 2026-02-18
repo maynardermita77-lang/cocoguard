@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'api_service.dart';
@@ -647,6 +648,129 @@ class FeedbackApi {
         'message': message,
         'rating': rating,
       });
+      return ApiService.handleResponse(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// Get current user's feedback history
+  static Future<List<dynamic>> getMyFeedback({int limit = 50}) async {
+    try {
+      final response = await ApiService.get('/feedback/user/me?limit=$limit');
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        if (decoded is List) return decoded;
+        if (decoded is Map && decoded.containsKey('feedback')) {
+          return decoded['feedback'] as List;
+        }
+        return [];
+      }
+      throw Exception('Failed to load feedback: ${response.statusCode}');
+    } catch (e) {
+      rethrow;
+    }
+  }
+}
+
+/// Two-Factor Authentication API endpoints
+class TwoFactorApi {
+  /// Get 2FA status for current user
+  static Future<Map<String, dynamic>> getStatus() async {
+    try {
+      final response = await ApiService.get('/2fa/status');
+      return ApiService.handleResponse(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// Request 2FA setup (sends email code)
+  static Future<Map<String, dynamic>> setup() async {
+    try {
+      final response = await ApiService.post('/2fa/setup', {});
+      return ApiService.handleResponse(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// Enable 2FA with verification code
+  static Future<Map<String, dynamic>> enable(String code) async {
+    try {
+      final response = await ApiService.post('/2fa/enable', {'code': code});
+      return ApiService.handleResponse(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// Disable 2FA
+  static Future<Map<String, dynamic>> disable() async {
+    try {
+      final response = await ApiService.post('/2fa/disable', {});
+      return ApiService.handleResponse(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// Send login 2FA code (no auth required, uses email query param)
+  static Future<Map<String, dynamic>> sendLoginCode(String email) async {
+    try {
+      final url = await ApiService.getBaseUrl();
+      final response = await http.post(
+        Uri.parse('$url/2fa/send-login-code?email=${Uri.encodeComponent(email)}'),
+        headers: {'Accept': 'application/json'},
+      );
+      return ApiService.handleResponse(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// Verify login 2FA code (no auth required)
+  static Future<Map<String, dynamic>> verifyLoginCode(
+    String email,
+    String code,
+  ) async {
+    try {
+      final url = await ApiService.getBaseUrl();
+      final response = await http.post(
+        Uri.parse(
+          '$url/2fa/verify-login?email=${Uri.encodeComponent(email)}&code=${Uri.encodeComponent(code)}',
+        ),
+        headers: {'Accept': 'application/json'},
+      );
+      return ApiService.handleResponse(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
+}
+
+/// Account management API endpoints
+class AccountApi {
+  /// Delete account (requires password verification)
+  static Future<Map<String, dynamic>> deleteAccount(
+    String currentPassword,
+  ) async {
+    try {
+      final url = await ApiService.getBaseUrl();
+      final token = ApiService.getToken();
+      // http.delete doesn't support body, so we use http.Request
+      final request = http.Request(
+        'DELETE',
+        Uri.parse('$url/auth/delete-account'),
+      );
+      request.headers.addAll({
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        if (token != null) 'Authorization': 'Bearer $token',
+      });
+      request.body = jsonEncode({'current_password': currentPassword});
+      final streamed = await http.Client().send(request);
+      final response = await http.Response.fromStream(streamed);
       return ApiService.handleResponse(response);
     } catch (e) {
       rethrow;
