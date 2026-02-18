@@ -15,9 +15,12 @@ class ApiService {
 
   // Default server port
   static const int _defaultPort = 8000;
+  
+  // Production backend URL (Render deployment)
+  static const String _productionUrl = 'https://cocoguard-backend.onrender.com';
 
   /// Get the base URL with automatic platform detection
-  /// For physical devices: uses stored server IP or prompts user to configure
+  /// For physical devices: uses production URL by default
   /// For emulators/web: uses appropriate localhost mapping
   static Future<String> getBaseUrl() async {
     // Check if user has configured a custom backend URL (for physical devices)
@@ -35,24 +38,18 @@ class ApiService {
       return 'http://localhost:$_defaultPort';
     }
 
-    // Android emulator maps 10.0.2.2 -> host localhost
-    if (Platform.isAndroid) {
-      // Check if running on emulator or physical device
-      // Physical devices need server IP configured
-      return 'http://10.0.2.2:$_defaultPort';
-    }
-
-    // iOS simulator and desktop
-    return 'http://localhost:$_defaultPort';
+    // For mobile devices (Android/iOS), use production URL by default
+    // This allows the app to work on any phone with internet access
+    return _productionUrl;
   }
 
   /// Get the base URL synchronously (uses cached value or default)
-  /// For physical devices, ensure setCustomBackendUrl() was called with server IP
+  /// For physical devices, defaults to production URL
   static String get baseUrl {
     if (_customBaseUrl != null) return _customBaseUrl!;
     if (kIsWeb) return 'http://localhost:$_defaultPort';
-    if (Platform.isAndroid) return 'http://10.0.2.2:$_defaultPort';
-    return 'http://localhost:$_defaultPort';
+    // Mobile devices use production URL
+    return _productionUrl;
   }
 
   /// Set a custom backend URL (e.g., for physical devices on same network)
