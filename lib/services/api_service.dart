@@ -15,7 +15,7 @@ class ApiService {
 
   // Default server port
   static const int _defaultPort = 8000;
-  
+
   // Production backend URL (Render deployment)
   static const String _productionUrl = 'https://cocoguard-backend.onrender.com';
 

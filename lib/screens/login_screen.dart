@@ -13,7 +13,7 @@ import '../services/knowledge_service.dart';
 import 'register_screen.dart';
 import 'forgot_password_screen.dart';
 import 'dashboard_screen.dart';
-import 'settings/backend_config_screen.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -190,19 +190,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ],
         ),
         actions: [
-          if (isConnectionError)
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const BackendConfigScreen(),
-                  ),
-                );
-              },
-              child: Text(tr('login.configure_server')),
-            ),
+
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(tr('common.ok')),
@@ -441,31 +429,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 16),
-                          // Server Configuration for physical devices
-                          TextButton.icon(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const BackendConfigScreen(),
-                                ),
-                              );
-                            },
-                            icon: const Icon(
-                              Icons.settings,
-                              size: 18,
-                              color: Color(0xFF666666),
-                            ),
-                            label: Text(
-                              tr('login.config_server'),
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Color(0xFF666666),
-                              ),
-                            ),
-                          ),
+
                         ],
                       ),
                     ),

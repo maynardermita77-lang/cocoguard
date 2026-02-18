@@ -11,7 +11,6 @@ import '../services/translation_service.dart';
 import 'edit_profile_screen.dart';
 import 'change_password_screen.dart';
 import 'login_screen.dart';
-import 'settings/backend_config_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -803,21 +802,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     trailing: const Icon(Icons.chevron_right),
                     onTap: _chooseLanguage,
                   ),
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: const Icon(Icons.cloud, color: Colors.blue),
-                    title: Text(tr('settings.backend')),
-                    subtitle: Text(tr('settings.backend_desc')),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const BackendConfigScreen(),
-                        ),
-                      );
-                    },
-                  ),
+
                   ValueListenableBuilder<ThemeMode>(
                     valueListenable: ThemeService.themeMode,
                     builder: (context, mode, _) {
